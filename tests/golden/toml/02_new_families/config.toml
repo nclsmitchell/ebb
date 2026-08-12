@@ -1,0 +1,3 @@
+[models]
+reasoning = "o4-mini"
+flagship = "gpt-5.1"

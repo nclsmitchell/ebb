@@ -1,0 +1,230 @@
+# Hand-labelled ground truth for the golden corpus under tests/golden/. Deliberately kept
+# OUTSIDE that directory tree: it lives at tests/golden_manifest.yaml, a sibling of
+# tests/golden/, not inside it — putting it inside would make it a scannable .yaml file in
+# its own right, and its own contents (literal matched_text strings like "gpt-4o") would be
+# picked up by the yaml detector as spurious extra matches, contaminating every fixture's
+# score with a false positive from the manifest itself.
+#
+# Ground truth reflects real, current (as of this session) OpenAI/Anthropic/Google model
+# identifier shapes — not what patterns.py happens to already match. That is the entire point:
+# where a hand-labelled entry has no corresponding detector output, that is a real recall gap,
+# not a fixture mistake. `path` is relative to tests/golden/.
+#
+# Each detector group (the path's first segment) needs at least one fixture with zero expected
+# entries — decoys that share surface vocabulary with real model ids without being one — so a
+# detector that over-matches shows up as a precision failure, not just a recall pass.
+
+- path: python/01_basic_openai/app.py
+  line: 3
+  matched_text: gpt-4o
+- path: python/01_basic_openai/app.py
+  line: 4
+  matched_text: gpt-4o-mini
+- path: python/01_basic_openai/app.py
+  line: 5
+  matched_text: gpt-3.5-turbo
+- path: python/01_basic_openai/app.py
+  line: 9
+  matched_text: text-embedding-3-large
+
+- path: python/02_anthropic_dated_and_named/app.py
+  line: 4
+  matched_text: claude-3-opus-20240229
+- path: python/02_anthropic_dated_and_named/app.py
+  line: 5
+  matched_text: claude-3-5-sonnet-20241022
+- path: python/02_anthropic_dated_and_named/app.py
+  line: 6
+  matched_text: claude-opus-4-8
+
+- path: python/03_new_families_not_yet_supported/app.py
+  line: 2
+  matched_text: o3-mini
+- path: python/03_new_families_not_yet_supported/app.py
+  line: 3
+  matched_text: o3
+- path: python/03_new_families_not_yet_supported/app.py
+  line: 4
+  matched_text: o4-mini
+- path: python/03_new_families_not_yet_supported/app.py
+  line: 5
+  matched_text: gpt-5
+- path: python/03_new_families_not_yet_supported/app.py
+  line: 6
+  matched_text: gpt-5-mini
+
+- path: python/04_snapshot_suffix_and_dotted_version/app.py
+  line: 1
+  matched_text: gpt-4-0125-preview
+- path: python/04_snapshot_suffix_and_dotted_version/app.py
+  line: 2
+  matched_text: gpt-4.1
+- path: python/04_snapshot_suffix_and_dotted_version/app.py
+  line: 3
+  matched_text: gpt-4.1-mini
+
+# python/05_decoys_and_out_of_scope_vendors — no expected entries by design.
+
+- path: typescript/01_basic_google/config.ts
+  line: 1
+  matched_text: gemini-1.5-pro
+- path: typescript/01_basic_google/config.ts
+  line: 2
+  matched_text: gemini-1.5-flash
+- path: typescript/01_basic_google/config.ts
+  line: 3
+  matched_text: text-bison-001
+
+- path: typescript/02_mixed_vendors/config.ts
+  line: 2
+  matched_text: gpt-4-turbo
+- path: typescript/02_mixed_vendors/config.ts
+  line: 3
+  matched_text: claude-3-haiku-20240307
+- path: typescript/02_mixed_vendors/config.ts
+  line: 4
+  matched_text: gemini-1.0-pro-vision
+
+- path: typescript/03_gemini_new_family/config.ts
+  line: 1
+  matched_text: gemini-3-pro-preview
+- path: typescript/03_gemini_new_family/config.ts
+  line: 2
+  matched_text: gemini-2.0-flash-exp
+- path: typescript/03_gemini_new_family/config.ts
+  line: 3
+  matched_text: gemini-2.0-flash
+
+- path: typescript/04_template_literals_and_comments/config.ts
+  line: 1
+  matched_text: claude-opus-4-8
+- path: typescript/04_template_literals_and_comments/config.ts
+  line: 2
+  matched_text: claude-3-5-sonnet-20241022
+
+# typescript/05_decoys — no expected entries by design.
+
+- path: yaml/01_basic/config.yaml
+  line: 1
+  matched_text: gpt-4o
+- path: yaml/01_basic/config.yaml
+  line: 2
+  matched_text: claude-3-haiku-20240307
+- path: yaml/01_basic/config.yaml
+  line: 3
+  matched_text: text-embedding-ada-002
+
+- path: yaml/02_nested/config.yaml
+  line: 3
+  matched_text: gpt-4-turbo
+- path: yaml/02_nested/config.yaml
+  line: 4
+  matched_text: gpt-4o
+- path: yaml/02_nested/config.yaml
+  line: 6
+  matched_text: gemini-1.5-pro
+
+- path: yaml/03_new_families/config.yaml
+  line: 1
+  matched_text: o3-mini
+- path: yaml/03_new_families/config.yaml
+  line: 2
+  matched_text: gpt-5
+- path: yaml/03_new_families/config.yaml
+  line: 3
+  matched_text: gpt-4.1
+
+# yaml/04_decoys — no expected entries by design.
+
+- path: json/01_basic/settings.json
+  line: 2
+  matched_text: gpt-4o
+- path: json/01_basic/settings.json
+  line: 3
+  matched_text: claude-3-opus-20240229
+
+- path: json/02_array_and_nested/settings.json
+  line: 3
+  matched_text: gpt-3.5-turbo
+- path: json/02_array_and_nested/settings.json
+  line: 4
+  matched_text: text-embedding-3-small
+- path: json/02_array_and_nested/settings.json
+  line: 5
+  matched_text: gemini-1.5-pro
+- path: json/02_array_and_nested/settings.json
+  line: 5
+  matched_text: gemini-1.5-flash
+
+- path: json/03_new_families/settings.json
+  line: 2
+  matched_text: o3
+- path: json/03_new_families/settings.json
+  line: 3
+  matched_text: gpt-5-mini
+- path: json/03_new_families/settings.json
+  line: 4
+  matched_text: gpt-4-0125-preview
+
+# json/04_decoys — no expected entries by design.
+
+- path: toml/01_basic/config.toml
+  line: 2
+  matched_text: gpt-4o
+- path: toml/01_basic/config.toml
+  line: 3
+  matched_text: claude-3-haiku-20240307
+
+- path: toml/02_new_families/config.toml
+  line: 2
+  matched_text: o4-mini
+- path: toml/02_new_families/config.toml
+  line: 3
+  matched_text: gpt-5.1
+
+# toml/03_decoys — no expected entries by design.
+
+- path: terraform/01_basic/main.tf
+  line: 3
+  matched_text: gpt-4-turbo
+
+- path: terraform/02_bedrock_and_vertex/main.tf
+  line: 7
+  matched_text: claude-3-haiku-20240307
+
+# terraform/03_decoys — no expected entries by design.
+
+- path: dockerfile/01_basic/Dockerfile
+  line: 2
+  matched_text: gpt-4o
+- path: dockerfile/01_basic/Dockerfile
+  line: 3
+  matched_text: claude-3-haiku-20240307
+
+- path: dockerfile/02_new_family/Dockerfile.worker
+  line: 2
+  matched_text: o3-mini
+- path: dockerfile/02_new_family/Dockerfile.worker
+  line: 3
+  matched_text: text-embedding-3-large
+
+# dockerfile/03_decoys — no expected entries by design.
+
+# Notebook line numbers are cell-relative, not file-relative (see
+# ebb/detect/notebook.py) — line 1 means "first line of that cell's joined source", not
+# "first line of the .ipynb file".
+- path: notebook/01_basic/analysis.ipynb
+  line: 1
+  matched_text: gpt-4o
+- path: notebook/01_basic/analysis.ipynb
+  line: 2
+  matched_text: claude-3-haiku-20240307
+
+- path: notebook/02_new_family/analysis.ipynb
+  line: 1
+  matched_text: o3-mini
+- path: notebook/02_new_family/analysis.ipynb
+  line: 2
+  matched_text: text-embedding-3-small
+
+# notebook/03_decoys — no expected entries by design.

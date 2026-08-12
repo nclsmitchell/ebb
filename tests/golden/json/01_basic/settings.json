@@ -1,0 +1,4 @@
+{
+  "model": "gpt-4o",
+  "fallback": "claude-3-opus-20240229"
+}

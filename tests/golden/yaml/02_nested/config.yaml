@@ -1,0 +1,6 @@
+providers:
+  openai:
+    chat: gpt-4-turbo
+    vision: gpt-4o
+  google:
+    default: gemini-1.5-pro

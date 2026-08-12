@@ -1,0 +1,5 @@
+{
+  "primary": "o3",
+  "secondary": "gpt-5-mini",
+  "notes": "gpt-4-0125-preview retained for A/B testing"
+}

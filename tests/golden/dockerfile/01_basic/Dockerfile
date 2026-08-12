@@ -1,0 +1,3 @@
+FROM python:3.12-slim
+ENV DEFAULT_MODEL=gpt-4o
+ENV FALLBACK_MODEL=claude-3-haiku-20240307

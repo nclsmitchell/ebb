@@ -1,0 +1,4 @@
+FROM python:3.12-slim
+LABEL maintainer="platform team"
+ENV SERVICE_NAME=gpt-gateway
+ENV REGION=us-claude-east

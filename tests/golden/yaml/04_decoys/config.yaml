@@ -1,0 +1,3 @@
+service_name: chat-gpt-clone
+region: us-gemini-west-1
+notes: "ask claude for help"

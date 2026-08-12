@@ -1,0 +1,107 @@
+# OpenAI model retirements.
+#
+# Source of truth: https://developers.openai.com/api/docs/deprecations
+# Every entry's source_url and verified_at are hard requirements — the loader refuses to load
+# any record missing either (CLAUDE_CODE_PLAN.md Session 4). A wrong shutdown date is fatal to
+# trust, so this data is transcribed from the live page, not written from memory.
+
+- canonical_id: gpt-3.5-turbo-0125
+  provider: openai
+  announced_at: 2026-04-22
+  shutdown_at: 2026-10-23
+  replacement_id: gpt-5.6-terra
+  source_url: https://developers.openai.com/api/docs/deprecations
+  verified_at: 2026-08-12
+
+- canonical_id: gpt-4-0613
+  provider: openai
+  announced_at: 2026-04-22
+  shutdown_at: 2026-10-23
+  replacement_id: gpt-5.6-sol
+  source_url: https://developers.openai.com/api/docs/deprecations
+  verified_at: 2026-08-12
+
+- canonical_id: gpt-4-1106-preview
+  provider: openai
+  announced_at: 2026-04-22
+  shutdown_at: 2026-10-23
+  replacement_id: gpt-5.6-sol
+  source_url: https://developers.openai.com/api/docs/deprecations
+  verified_at: 2026-08-12
+
+- canonical_id: gpt-4-turbo
+  provider: openai
+  announced_at: 2026-04-22
+  shutdown_at: 2026-10-23
+  replacement_id: gpt-5.6-sol
+  source_url: https://developers.openai.com/api/docs/deprecations
+  verified_at: 2026-08-12
+
+- canonical_id: gpt-4o-2024-05-13
+  provider: openai
+  announced_at: 2026-04-22
+  shutdown_at: 2026-10-23
+  replacement_id: gpt-5.6-sol
+  source_url: https://developers.openai.com/api/docs/deprecations
+  verified_at: 2026-08-12
+
+- canonical_id: o1-2024-12-17
+  provider: openai
+  announced_at: 2026-04-22
+  shutdown_at: 2026-10-23
+  replacement_id: gpt-5.6-luna
+  source_url: https://developers.openai.com/api/docs/deprecations
+  verified_at: 2026-08-12
+
+# Already retired (shutdown_at is in the past relative to verified_at) — resolve() must still
+# find these; a retired model is exactly the case ebb exists to catch before it's too late.
+- canonical_id: o1-preview
+  provider: openai
+  announced_at: 2025-04-28
+  shutdown_at: 2025-07-28
+  replacement_id: o3
+  source_url: https://developers.openai.com/api/docs/deprecations
+  verified_at: 2026-08-12
+
+- canonical_id: o1-mini
+  provider: openai
+  announced_at: 2025-04-28
+  shutdown_at: 2025-10-27
+  replacement_id: o4-mini
+  source_url: https://developers.openai.com/api/docs/deprecations
+  verified_at: 2026-08-12
+
+- canonical_id: dall-e-3
+  provider: openai
+  announced_at: 2025-11-14
+  shutdown_at: 2026-05-12
+  replacement_id: gpt-image-2
+  source_url: https://developers.openai.com/api/docs/deprecations
+  verified_at: 2026-08-12
+
+- canonical_id: dall-e-2
+  provider: openai
+  announced_at: 2025-11-14
+  shutdown_at: 2026-05-12
+  replacement_id: gpt-image-2
+  source_url: https://developers.openai.com/api/docs/deprecations
+  verified_at: 2026-08-12
+
+- canonical_id: gpt-4.5-preview
+  provider: openai
+  announced_at: 2025-04-14
+  shutdown_at: 2025-07-14
+  replacement_id: gpt-4.1
+  source_url: https://developers.openai.com/api/docs/deprecations
+  verified_at: 2026-08-12
+
+# A floating alias tracked as its own entry — OpenAI deprecated the alias itself, not one dated
+# snapshot behind it. See resolve() tests for why an *unverified* "-latest" alias must resolve
+# to unknown rather than being fuzzy-matched against this or any other entry.
+- canonical_id: chatgpt-4o-latest
+  provider: openai
+  announced_at: 2025-11-18
+  shutdown_at: 2026-02-17
+  replacement_id: gpt-5.1-chat-latest
+  source_url: https://developers.openai.com/api/docs/deprecations
+  verified_at: 2026-08-12

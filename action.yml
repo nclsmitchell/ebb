@@ -1,0 +1,92 @@
+name: "foretop ebb — model retirement scan"
+description: >-
+  Scans a repository for AI model identifiers, joins them to provider retirement dates, and
+  annotates the pull request — before the deadline becomes an outage.
+author: "foretop"
+branding:
+  icon: "anchor"
+  color: "blue"
+
+inputs:
+  path:
+    description: "Path to scan, relative to the repository root."
+    required: false
+    default: "."
+  fail-on:
+    description: >-
+      Fail the check if any finding is at or above this severity (info, low, medium, high,
+      critical). Set to an empty string to always pass (report-only).
+    required: false
+    default: "critical"
+  registry-dir:
+    description: >-
+      Directory of retirement-registry YAML files, overriding the bundled data. Most users
+      should leave this unset.
+    required: false
+    default: ""
+  comment-on-pr:
+    description: "Upsert a summary comment on the pull request (true/false)."
+    required: false
+    default: "true"
+  github-token:
+    description: "Token used to read/write the PR comment. Needs pull-requests: write."
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  exit-code:
+    description: "ebb scan's own exit code: 0 clean, 1 a finding met --fail-on, 2 internal error."
+    value: ${{ steps.scan.outputs.exit-code }}
+
+# Composite, not Docker or JS — the whole point is `uvx foretop-ebb`, already a published,
+# versioned artifact; wrapping it in another container/build step would duplicate what PyPI
+# publishing already gives this action for free (CLAUDE_CODE_PLAN.md Session 8).
+runs:
+  using: "composite"
+  steps:
+    - name: Install uv
+      uses: astral-sh/setup-uv@v9.0.0
+
+    - name: Scan and emit PR annotations
+      id: scan
+      shell: bash
+      run: |
+        set +e
+        args=(scan "${{ inputs.path }}" --format annotations)
+        if [ -n "${{ inputs.registry-dir }}" ]; then
+          args+=(--registry-dir "${{ inputs.registry-dir }}")
+        fi
+        if [ -n "${{ inputs.fail-on }}" ]; then
+          args+=(--fail-on "${{ inputs.fail-on }}")
+        fi
+        uvx foretop-ebb "${args[@]}"
+        echo "exit-code=$?" >> "$GITHUB_OUTPUT"
+
+    - name: Render PR comment body
+      if: inputs.comment-on-pr == 'true' && github.event_name == 'pull_request'
+      shell: bash
+      run: |
+        args=(scan "${{ inputs.path }}" --format markdown)
+        if [ -n "${{ inputs.registry-dir }}" ]; then
+          args+=(--registry-dir "${{ inputs.registry-dir }}")
+        fi
+        uvx foretop-ebb "${args[@]}" > ebb-comment-body.md
+
+    # Find-and-edit by an HTML marker, never post a second comment on repeat pushes
+    # (CLAUDE_CODE_PLAN.md Session 8's explicit requirement) — see scripts/upsert_pr_comment.sh.
+    - name: Upsert PR comment
+      if: inputs.comment-on-pr == 'true' && github.event_name == 'pull_request'
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        COMMENT_BODY_FILE: ebb-comment-body.md
+      run: ${{ github.action_path }}/scripts/upsert_pr_comment.sh
+
+    # Exit codes are an API (specs/ebb.md §6): 0/1/2 must never be conflated. `set +e` above
+    # kept this step alive through a non-zero scan so the comment/annotation steps still run —
+    # this is what actually fails the check, once everything else has had its turn.
+    - name: Fail the check if the scan met --fail-on or errored
+      if: steps.scan.outputs.exit-code != '0'
+      shell: bash
+      run: exit ${{ steps.scan.outputs.exit-code }}

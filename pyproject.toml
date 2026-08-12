@@ -1,0 +1,72 @@
+[project]
+name = "foretop-ebb"
+version = "0.1.0"
+description = "Tells an engineering team which repos, jobs, prompts and owners break when an AI provider retires a model — before the deadline becomes an outage."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+dependencies = [
+    "typer>=0.15",
+    "rich>=13.9",
+    "pathspec>=0.12",
+    "pydantic>=2.9",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+ebb = "ebb.__main__:app"
+# uv's `uvx <name>` runs the entry point matching the distribution name by default (no `--from`
+# needed) — specs/ebb.md §9's definition of done promises exactly `uvx foretop-ebb scan .`, so
+# that name needs its own script pointing at the same app, not just `ebb`.
+foretop-ebb = "ebb.__main__:app"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "types-pyyaml>=6.0",
+    "hypothesis>=6.115",
+    "jsonschema>=4.23",
+    # Needed standalone (the public mirror has no parent workspace to pull these from) — in
+    # the monorepo, the root pyproject.toml's dev group already provides both, so this is a
+    # harmless duplicate there, same reasoning as the [tool.ruff]/[tool.mypy] sections below.
+    "mypy>=2.3.0",
+    "ruff>=0.16.2",
+]
+
+[tool.uv.build-backend]
+module-name = "ebb"
+
+[build-system]
+requires = ["uv_build>=0.11.32,<0.12.0"]
+build-backend = "uv_build"
+
+# Duplicated from the monorepo root pyproject.toml, not inherited from it: ruff/mypy resolve
+# config from the *nearest* pyproject.toml containing a [tool.ruff]/[tool.mypy] table, so once
+# this section exists here it becomes authoritative for everything under apps/ebb/ regardless
+# of the root's own settings — hence "duplicated to stay identical" rather than left absent
+# and implicitly inherited. Needed standalone too: scripts/sync-ebb-mirror.sh copies this file
+# verbatim into the public mirror (nclsmitchell/ebb), which has no parent pyproject.toml to
+# inherit from at all. Keep these values equal to the root's [tool.ruff]/[tool.mypy]/
+# [tool.pytest.ini_options] by hand if either changes.
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["tests/fixtures", "tests/golden"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "A", "C4", "SIM", "TCH", "RUF"]
+
+[tool.ruff.lint.isort]
+# Explicit, not left to auto-detection: from the monorepo root, ruff's src-layout heuristic
+# finds apps/ebb/src/ebb as first-party on its own; from *this* file, standalone (the public
+# mirror), it doesn't reliably do the same, silently reclassifying `from ebb...` imports as
+# third-party and reordering them. Pin it so linting behaves identically in both places.
+known-first-party = ["ebb"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+
+[tool.pytest.ini_options]
+addopts = "-ra"
